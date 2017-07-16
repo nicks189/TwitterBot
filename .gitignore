@@ -1,0 +1,8 @@
+*.iml
+src/main/resources/twitter4j.properties
+src/test/resources/twitter4j.properties
+target/
+src/test/
+out/
+/.idea
+*.sh
