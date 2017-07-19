@@ -70,14 +70,27 @@ public class Tweet {
         this.id = id;
     }
 
-    public boolean isFavorited() {
+    public void isFavorited() {
         // TODO
-        return false;
     }
 
     public boolean setFavorite() {
         // TODO
         return false;
+    }
+
+    public String getLink() {
+        /* This will only work with tweets that have the link at the end
+         * The bot currently uses the format: <Title> <Hastags> <Link>
+         * This should be changed
+         */
+        String[] arr = value.split(" ");
+        if(arr.length == 2) {
+            // This tweet has no hashtags
+            return arr[1];
+        } else {
+            return arr[2];
+        }
     }
 
     public void sendTweet() throws TwitterException {
@@ -86,6 +99,14 @@ public class Tweet {
 
     public boolean checkTweetExists() {
         List<Tweet> myTweets = twitter.getMyTweets();
+        String link = getLink();
+
+        for(Tweet tweet : myTweets) {
+            // Checking the links is the only reliable way to compare tweets
+            if(link.equals(tweet.getLink())) {
+                return true;
+            }
+        }
 
         return false;
     }
