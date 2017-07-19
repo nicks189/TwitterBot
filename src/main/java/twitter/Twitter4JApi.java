@@ -22,12 +22,16 @@ public class Twitter4JApi implements TwitterApi {
         log = Log.getSingleton();
     }
 
-    public void tweet(String tweet) throws TwitterException {
-        twitter.updateStatus(tweet);
+    public Tweet tweet(String tweet) throws TwitterException {
+        return statusToTweet(twitter.updateStatus(tweet));
     }
 
-    public void tweet(Tweet tweet) throws TwitterException {
-        return;
+    public Tweet tweet(Tweet tweet) throws TwitterException {
+        return statusToTweet(twitter.updateStatus(tweet.getValue()));
+    }
+
+    public List getMyTweets() {
+        return getUserTweets(username());
     }
 
     public String username() {
@@ -40,23 +44,19 @@ public class Twitter4JApi implements TwitterApi {
         return res;
     }
 
-    public List getMyTweets() {
-        return getUserTweets(username());
-    }
-
     public List getUserTweets(String username) {
         // Use pagination to get as many tweets as the API allows (usually around 3,200)
-        List statuses = new ArrayList();
+        List<Tweet> tweets = new ArrayList();
         Paging page = new Paging(1, 200);
 
         while(true) {
             try {
-                int size = statuses.size();
-                statuses.addAll(twitter.getUserTimeline(username, page));
+                int size = tweets.size();
+                tweets.addAll(statusesToTweets(twitter.getUserTimeline(username, page)));
                 page.setPage(page.getPage() + 1);
 
                 // Limit to 10000
-                if (statuses.size() == size || statuses.size() >= 10000) {
+                if (tweets.size() == size || tweets.size() >= 10000) {
                     break;
                 }
             } catch(TwitterException e) {
@@ -64,21 +64,21 @@ public class Twitter4JApi implements TwitterApi {
             }
         }
 
-        return statuses;
+        return tweets;
     }
 
     public List getTimeline() {
-        List statuses = new ArrayList();
+        List<Tweet> tweets = new ArrayList();
         Paging page = new Paging(1, 200);
 
         while(true) {
             try {
-                int size = statuses.size();
-                statuses.addAll(twitter.getHomeTimeline(page));
+                int size = tweets.size();
+                tweets.addAll(statusesToTweets(twitter.getHomeTimeline(page)));
                 page.setPage(page.getPage() + 1);
 
                 // Limit to 10000
-                if (statuses.size() == size || statuses.size() >= 10000) {
+                if (tweets.size() == size || tweets.size() >= 10000) {
                     break;
                 }
             } catch(TwitterException e) {
@@ -86,21 +86,21 @@ public class Twitter4JApi implements TwitterApi {
             }
         }
 
-        return statuses;
+        return tweets;
     }
 
     public List getFavorites() {
-        List statuses = new ArrayList();
+        List<Tweet> tweets = new ArrayList();
         Paging page = new Paging(1, 200);
 
         while(true) {
             try {
-                int size = statuses.size();
-                statuses.addAll(twitter.getFavorites(page));
+                int size = tweets.size();
+                tweets.addAll(statusesToTweets(twitter.getFavorites(page)));
                 page.setPage(page.getPage() + 1);
 
                 // Limit to 10000
-                if (statuses.size() == size || statuses.size() >= 10000) {
+                if (tweets.size() == size || tweets.size() >= 10000) {
                     break;
                 }
             } catch(TwitterException e) {
@@ -108,6 +108,18 @@ public class Twitter4JApi implements TwitterApi {
             }
         }
 
-        return statuses;
+        return tweets;
+    }
+
+    protected Tweet statusToTweet(Status status) {
+        return new Tweet(status.getText(), status.getUser().getScreenName(), status.getId());
+    }
+
+    protected List<Tweet> statusesToTweets(List<Status> statuses) {
+        List<Tweet> tweets = new ArrayList<>();
+        for(Status status : statuses) {
+            tweets.add(statusToTweet(status));
+        }
+        return tweets;
     }
 }

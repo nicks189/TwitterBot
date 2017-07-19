@@ -2,6 +2,7 @@ package bot;
 
 import content.Entry;
 import content.Feed;
+import twitter.Tweet;
 import twitter.Twitter4JApi;
 import twitter.TwitterApi;
 import twitter4j.TwitterException;
@@ -37,18 +38,24 @@ public class TwitterBot {
         String url = entry.getUrl();
 
         // Tweet in format of <Title> <Hashtags> <Link>
-        String tweet = title + " " + hashtags + " " + url;
+        String tweetmsg = title + " " + hashtags + " " + url;
 
-        if(tweet.length() > 140) {
+        if(tweetmsg.length() > 140) {
             if(url.length() + hashtags.length() > 140) {
                 log.add("Article url is too long; tweet can't be sent.");
                 return false;
             }
             // Truncate title and add enough space for "... "
-            tweet = title.substring(0, title.length() - (tweet.length() - 135));
-            tweet += "... ";
-            tweet += hashtags + " ";
-            tweet += url;
+            tweetmsg = title.substring(0, title.length() - (tweetmsg.length() - 135));
+            tweetmsg += "... ";
+            tweetmsg += hashtags + " ";
+            tweetmsg += url;
+        }
+
+        Tweet tweet = new Tweet(tweetmsg, url);
+        if(tweet.checkTweetExists()) {
+            log.add("Tweet with similar content already exists.");
+            return false;
         }
 
         try {
@@ -66,19 +73,19 @@ public class TwitterBot {
     }
 
     public boolean findFavorite() {
-        return true;
+        return false;
     }
 
     public boolean findUnfavorite() {
-        return true;
+        return false;
     }
 
     public boolean findFollow() {
-        return true;
+        return false;
     }
 
     public boolean findUnfollow() {
-        return true;
+        return false;
     }
 
     private Entry randomEntry(List<Entry> entries) {

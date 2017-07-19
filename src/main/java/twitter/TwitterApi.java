@@ -10,17 +10,17 @@ import java.util.List;
 public interface TwitterApi {
     // Add abstract class at some point for shared implementation
 
-    void tweet(String tweet) throws TwitterException;
+    Tweet tweet(String tweet) throws TwitterException;
 
-    void tweet(Tweet tweet) throws TwitterException;
+    Tweet tweet(Tweet tweet) throws TwitterException;
 
     String username();
 
-    List getMyTweets();
+    List<Tweet> getMyTweets();
 
-    List getUserTweets(String username);
+    List<Tweet> getUserTweets(String username);
 
-    List getTimeline();
+    List<Tweet> getTimeline();
 
-    List getFavorites();
+    List<Tweet> getFavorites();
 }
