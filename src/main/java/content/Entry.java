@@ -46,9 +46,7 @@ public class Entry {
         this.date = date;
     }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getTitle() { return title; }
 
     public String getAuthor() {
         return author;

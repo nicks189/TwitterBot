@@ -10,9 +10,9 @@ import java.util.List;
 public interface TwitterApi {
     // Add abstract class at some point for shared implementation
 
-    Tweet tweet(String tweet) throws TwitterException;
+    Tweet tweet(String tweet);
 
-    Tweet tweet(Tweet tweet) throws TwitterException;
+    Tweet tweet(Tweet tweet);
 
     String username();
 
@@ -24,7 +24,15 @@ public interface TwitterApi {
 
     List<Tweet> getFavorites();
 
+    boolean followUser(String user);
+
+    boolean unfollowUser(String user);
+
+    boolean checkFollowingUser(String user);
+
     Tweet favoriteTweet(Tweet tweet);
 
     Tweet unfavoriteTweet(Tweet tweet);
+
+    List<Tweet> search(String keyword);
 }

@@ -22,12 +22,19 @@ public class Twitter4JApi implements TwitterApi {
         log = Log.getSingleton();
     }
 
-    public Tweet tweet(String tweet) throws TwitterException {
-        return statusToTweet(twitter.updateStatus(tweet));
+    public Tweet tweet(String tweet) {
+        try {
+            Tweet res = statusToTweet(twitter.updateStatus(tweet));
+            log.add("Tweet sent with id " + res.getId());
+            return res;
+        } catch(TwitterException e) {
+            log.add("Failed to send tweet.");
+            return new Tweet(tweet);
+        }
     }
 
-    public Tweet tweet(Tweet tweet) throws TwitterException {
-        return statusToTweet(twitter.updateStatus(tweet.getValue()));
+    public Tweet tweet(Tweet tweet) {
+        return tweet(tweet.getValue());
     }
 
     public List<Tweet> getMyTweets() {
@@ -39,7 +46,7 @@ public class Twitter4JApi implements TwitterApi {
         try {
             res = twitter.getScreenName();
         } catch(TwitterException e) {
-            log.add("Couldn't resolve bot username.");
+            log.add("Couldn't resolve username.");
         }
         return res;
     }
@@ -111,10 +118,43 @@ public class Twitter4JApi implements TwitterApi {
         return tweets;
     }
 
+    public boolean followUser(String user) {
+        try {
+            twitter.createFriendship(user);
+            log.add("Followed user " + user);
+            return true;
+        } catch(TwitterException e) {
+            log.add("Couldn't follow user " + user);
+            return false;
+        }
+    }
+
+    public boolean unfollowUser(String user) {
+        try {
+            twitter.destroyFriendship(user);
+            log.add("Unfollowed user " + user);
+            return true;
+        } catch(TwitterException e) {
+            log.add("Couldn't unfollow user " + user);
+            return false;
+        }
+    }
+
+    public boolean checkFollowingUser(String user) {
+        try {
+            Relationship relationship = twitter.showFriendship(username(), user);
+            return relationship.isSourceFollowingTarget();
+        } catch(TwitterException e) {
+            log.add("Couldn't get relationship with " + user);
+        }
+        return false;
+    }
+
     public Tweet favoriteTweet(Tweet tweet) {
         try {
             twitter.createFavorite(tweet.getId());
             tweet.setFavorite(true);
+            log.add("Favorited tweet with id " + tweet.getId());
         } catch(TwitterException e) {
             log.add("Couldn't favorite tweet.");
         }
@@ -125,10 +165,21 @@ public class Twitter4JApi implements TwitterApi {
         try {
             twitter.destroyFavorite(tweet.getId());
             tweet.setFavorite(false);
+            log.add("Unfavorited tweet with id " + tweet.getId());
         } catch(TwitterException e) {
             log.add("Couldn't unfavorite tweet.");
         }
         return tweet;
+    }
+
+    public List<Tweet> search(String keyword) {
+        try {
+            Query query = new Query(keyword);
+            return statusesToTweets(twitter.search(query).getTweets());
+        } catch(TwitterException e) {
+            log.add("Couldn't search for tweets.");
+            return null;
+        }
     }
 
     protected Tweet statusToTweet(Status status) {
@@ -136,6 +187,7 @@ public class Twitter4JApi implements TwitterApi {
     }
 
     protected List<Tweet> statusesToTweets(List<Status> statuses) {
+        System.out.println(statuses.size());
         List<Tweet> tweets = new ArrayList<>();
         for(Status status : statuses) {
             tweets.add(statusToTweet(status));

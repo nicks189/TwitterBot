@@ -18,20 +18,36 @@ public class TwitterBot {
     private Feed feed;
     private TwitterApi twitter;
     private Log log;
+    private Random rand;
 
     public TwitterBot(Feed feed) {
         this.feed = feed;
         twitter = Twitter4JApi.getSingleton();
         log = Log.getSingleton();
+        rand = new Random();
     }
 
     public boolean performAction() {
-        return buildAndSendTweet();
+        rand.setSeed(System.currentTimeMillis());
+        int num = rand.nextInt(3);
+
+        if(num == 0) {
+            return buildAndSendTweet();
+        } else if(num == 1) {
+            return findFavorite();
+        } else if(num == 2) {
+            return findFollow();
+        }
+        return false;
     }
 
     public boolean buildAndSendTweet() {
         List<Entry> feedEntries = feed.getEntries();
-        Entry entry = randomEntry(feedEntries);
+        if(feedEntries.isEmpty()) {
+            log.add("Couldn't find any articles to tweet about.");
+            return false;
+        }
+        Entry entry = (Entry) randomElement(feedEntries);
 
         String title = entry.getTitle();
         String hashtags = generateHashtags(entry.getTitle());
@@ -61,22 +77,31 @@ public class TwitterBot {
         // Need to add some sort of tweet verification here
 
 
-        try {
-
-            twitter.tweet(tweet);
-            log.add("Tweet sent.");
-            return true;
-
-        } catch(TwitterException e) {
-
-            log.add("Failed to send tweet.");
+        // If the returned tweet doesn't have an id then it failed
+        if(twitter.tweet(tweet).getId() == 0) {
             return false;
-
         }
+        return true;
     }
 
     public boolean findFavorite() {
-        return false;
+        String keyword = (String) randomElement(feed.getKeywords());
+        System.out.println(keyword);
+        List<Tweet> tweets = twitter.search(keyword);
+
+        // Should add some verification here
+
+
+        Tweet tweet = (Tweet) randomElement(tweets);
+        if(tweet == null) {
+            log.add("Couldn't find any tweets to favorite.");
+            return false;
+        }
+        tweet = twitter.favoriteTweet(tweet);
+        if(!tweet.isFavorited()) {
+            return false;
+        }
+        return true;
     }
 
     public boolean findUnfavorite() {
@@ -84,20 +109,28 @@ public class TwitterBot {
     }
 
     public boolean findFollow() {
-        return false;
+        List<Tweet> favorites = twitter.getFavorites();
+        Tweet tweet = (Tweet) randomElement(favorites);
+        String user = tweet.getCreator();
+        if(twitter.checkFollowingUser(user)) {
+            log.add("Already following user " + user);
+            return false;
+        }
+        return twitter.followUser(user);
     }
 
     public boolean findUnfollow() {
         return false;
     }
 
-    private Entry randomEntry(List<Entry> entries) {
-        Random rand = new Random();
-        return entries.get(rand.nextInt(entries.size()));
+    private Object randomElement(List elements) {
+        if(elements.size() != 0) {
+            return elements.get(rand.nextInt(elements.size()));
+        }
+        return null;
     }
 
     private String generateHashtags(String entryTitle) {
-        Random rand = new Random();
         List<String> keywords = feed.getKeywords();
         String hashtags = "";
 
