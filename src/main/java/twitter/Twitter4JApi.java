@@ -30,7 +30,7 @@ public class Twitter4JApi implements TwitterApi {
         return statusToTweet(twitter.updateStatus(tweet.getValue()));
     }
 
-    public List getMyTweets() {
+    public List<Tweet> getMyTweets() {
         return getUserTweets(username());
     }
 
@@ -44,7 +44,7 @@ public class Twitter4JApi implements TwitterApi {
         return res;
     }
 
-    public List getUserTweets(String username) {
+    public List<Tweet> getUserTweets(String username) {
         // Use pagination to get as many tweets as the API allows (usually around 3,200)
         List<Tweet> tweets = new ArrayList();
         Paging page = new Paging(1, 200);
@@ -67,7 +67,7 @@ public class Twitter4JApi implements TwitterApi {
         return tweets;
     }
 
-    public List getTimeline() {
+    public List<Tweet> getTimeline() {
         List<Tweet> tweets = new ArrayList();
         Paging page = new Paging(1, 200);
 
@@ -89,7 +89,7 @@ public class Twitter4JApi implements TwitterApi {
         return tweets;
     }
 
-    public List getFavorites() {
+    public List<Tweet> getFavorites() {
         List<Tweet> tweets = new ArrayList();
         Paging page = new Paging(1, 200);
 
