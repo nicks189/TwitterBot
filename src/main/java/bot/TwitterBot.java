@@ -58,6 +58,8 @@ public class TwitterBot {
             return false;
         }
 
+        // Need to add some sort of tweet verification here
+
         try {
 
             twitter.tweet(tweet);
