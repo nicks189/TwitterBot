@@ -111,6 +111,26 @@ public class Twitter4JApi implements TwitterApi {
         return tweets;
     }
 
+    public Tweet favoriteTweet(Tweet tweet) {
+        try {
+            twitter.createFavorite(tweet.getId());
+            tweet.setFavorite(true);
+        } catch(TwitterException e) {
+            log.add("Couldn't favorite tweet.");
+        }
+        return tweet;
+    }
+
+    public Tweet unfavoriteTweet(Tweet tweet) {
+        try {
+            twitter.destroyFavorite(tweet.getId());
+            tweet.setFavorite(false);
+        } catch(TwitterException e) {
+            log.add("Couldn't unfavorite tweet.");
+        }
+        return tweet;
+    }
+
     protected Tweet statusToTweet(Status status) {
         return new Tweet(status.getText(), status.getUser().getScreenName(), status.getId());
     }
@@ -121,5 +141,9 @@ public class Twitter4JApi implements TwitterApi {
             tweets.add(statusToTweet(status));
         }
         return tweets;
+    }
+
+    protected Status lookupStatus(long id) throws TwitterException {
+        return twitter.lookup(id).get(0);
     }
 }

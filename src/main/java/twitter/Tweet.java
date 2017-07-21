@@ -14,6 +14,7 @@ public class Tweet {
     private String creator;
     private String value;
     private TwitterApi twitter;
+    private boolean favorited;
 
     public Tweet() {
         twitter = Twitter4JApi.getSingleton();
@@ -70,13 +71,21 @@ public class Tweet {
         this.id = id;
     }
 
-    public void isFavorited() {
-        // TODO
+    public boolean isFavorited() {
+        return favorited;
     }
 
-    public boolean setFavorite() {
-        // TODO
-        return false;
+    public void setFavorite(boolean status) {
+        // **This method should only be used by TwitterApi**
+        favorited = status;
+    }
+
+    public void favorite() {
+        twitter.favoriteTweet(this);
+    }
+
+    public void unfavorite() {
+        twitter.unfavoriteTweet(this);
     }
 
     public String getLink() {

@@ -23,4 +23,8 @@ public interface TwitterApi {
     List<Tweet> getTimeline();
 
     List<Tweet> getFavorites();
+
+    Tweet favoriteTweet(Tweet tweet);
+
+    Tweet unfavoriteTweet(Tweet tweet);
 }
