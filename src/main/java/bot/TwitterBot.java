@@ -113,7 +113,7 @@ public class TwitterBot {
         Tweet tweet = (Tweet) randomElement(favorites);
 
         if(tweet == null) {
-            log.add("There are no favorited tweets to follow from.");
+            log.add("No favorited tweets to follow from.");
             return false;
         }
 
