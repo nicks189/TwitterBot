@@ -60,7 +60,7 @@ public class Twitter4JApi implements TwitterApi {
                     break;
                 }
             } catch(TwitterException e) {
-                log.add("Couldn't get tweets.");
+                log.add("Couldn't get user tweets.");
             }
         }
 

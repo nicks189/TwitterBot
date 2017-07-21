@@ -80,7 +80,7 @@ public class Tweet {
     }
 
     public String getLink() {
-        /* This will only work with tweets that have the link at the end
+        /* WARNING: This will only work with tweets that have the link at the end
          * The bot currently uses the format: <Title> <Hastags> <Link>
          * This should be changed
          */
