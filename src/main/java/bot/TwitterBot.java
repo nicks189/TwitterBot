@@ -60,6 +60,7 @@ public class TwitterBot {
 
         // Need to add some sort of tweet verification here
 
+
         try {
 
             twitter.tweet(tweet);
