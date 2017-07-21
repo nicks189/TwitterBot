@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -47,14 +45,17 @@ public class Log {
         }
 
         try {
+
             FileWriter writer = new FileWriter(filePath, true);
-            // String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             Timestamp timeStamp = new Timestamp(new Date().getTime());
             writer.write(timeStamp + ": " + message + "\n");
             writer.close();
+
         } catch(IOException e) {
+
             System.out.println("Something went wrong when writing to log file.");
             return false;
+
         }
 
         return true;
