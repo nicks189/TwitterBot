@@ -111,6 +111,12 @@ public class TwitterBot {
     public boolean findFollow() {
         List<Tweet> favorites = twitter.getFavorites();
         Tweet tweet = (Tweet) randomElement(favorites);
+
+        if(tweet == null) {
+            log.add("There are no favorited tweets to follow from.");
+            return false;
+        }
+
         String user = tweet.getCreator();
         if(twitter.checkFollowingUser(user)) {
             log.add("Already following user " + user);
