@@ -24,6 +24,8 @@ public interface TwitterApi {
 
     List<Tweet> getFavorites();
 
+    List<String> getFollowedUsers();
+
     boolean followUser(String user);
 
     boolean unfollowUser(String user);

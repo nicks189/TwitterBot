@@ -28,7 +28,7 @@ public class TwitterBot {
 
     public boolean performAction() {
         rand.setSeed(System.currentTimeMillis());
-        int num = rand.nextInt(7);
+        int num = rand.nextInt(8);
 
         if(num == 0 || num == 1) {
             return buildAndSendTweet();
@@ -38,6 +38,8 @@ public class TwitterBot {
             return findFollow();
         } else if(num == 6) {
             return findUnfavorite();
+        } else if(num == 7) {
+            return findUnfollow();
         }
         return false;
     }
@@ -132,8 +134,9 @@ public class TwitterBot {
     }
 
     public boolean findUnfollow() {
-        // TODO
-        return false;
+        List<String> users = twitter.getFollowedUsers();
+        String user = (String) randomElement(users);
+        return twitter.unfollowUser(user);
     }
 
     private Object randomElement(List elements) {

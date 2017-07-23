@@ -118,6 +118,25 @@ public class Twitter4JApi implements TwitterApi {
         return tweets;
     }
 
+    public List<String> getFollowedUsers() {
+        List<String> usernames = new ArrayList<>();
+        try {
+            PagableResponseList<User> followed = twitter.getFriendsList(username(), -1);
+            usernames.addAll(usersToStrings(followed));
+            long cursor = followed.getNextCursor();
+
+            while(cursor != 0) {
+                usernames.addAll(usersToStrings(followed));
+                cursor = followed.getNextCursor();
+            }
+
+        } catch(TwitterException e) {
+            log.add("Couldn't get followed users.");
+        }
+
+        return usernames;
+    }
+
     public boolean followUser(String user) {
         try {
             twitter.createFriendship(user);
@@ -195,7 +214,15 @@ public class Twitter4JApi implements TwitterApi {
         return tweets;
     }
 
-    protected Status lookupStatus(long id) throws TwitterException {
-        return twitter.lookup(id).get(0);
+    protected String userToString(User user) {
+        return user.getScreenName();
+    }
+
+    protected List<String> usersToStrings(List<User> users) {
+        List<String> usernames = new ArrayList<>();
+        for(User user : users) {
+            usernames.add(userToString(user));
+        }
+        return usernames;
     }
 }
