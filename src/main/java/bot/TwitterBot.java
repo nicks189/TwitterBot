@@ -5,7 +5,6 @@ import content.Feed;
 import twitter.Tweet;
 import twitter.Twitter4JApi;
 import twitter.TwitterApi;
-import twitter4j.TwitterException;
 import utils.Log;
 
 import java.util.List;
@@ -29,14 +28,16 @@ public class TwitterBot {
 
     public boolean performAction() {
         rand.setSeed(System.currentTimeMillis());
-        int num = rand.nextInt(3);
+        int num = rand.nextInt(7);
 
-        if(num == 0) {
+        if(num == 0 || num == 1) {
             return buildAndSendTweet();
-        } else if(num == 1) {
+        } else if(num == 2 || num == 3) {
             return findFavorite();
-        } else if(num == 2) {
+        } else if(num == 4 || num == 5) {
             return findFollow();
+        } else if(num == 6) {
+            return findUnfavorite();
         }
         return false;
     }
@@ -86,7 +87,6 @@ public class TwitterBot {
 
     public boolean findFavorite() {
         String keyword = (String) randomElement(feed.getKeywords());
-        System.out.println(keyword);
         List<Tweet> tweets = twitter.search(keyword);
 
         // Should add some verification here
@@ -105,7 +105,13 @@ public class TwitterBot {
     }
 
     public boolean findUnfavorite() {
-        return false;
+        List<Tweet> favorites = twitter.getFavorites();
+        Tweet tweet = (Tweet) randomElement(favorites);
+        tweet = twitter.unfavoriteTweet(tweet);
+        if(tweet.isFavorited()) {
+            return false;
+        }
+        return true;
     }
 
     public boolean findFollow() {
@@ -126,6 +132,7 @@ public class TwitterBot {
     }
 
     public boolean findUnfollow() {
+        // TODO
         return false;
     }
 
