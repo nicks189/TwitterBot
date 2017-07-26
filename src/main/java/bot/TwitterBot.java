@@ -90,15 +90,15 @@ public class TwitterBot {
     public boolean findFavorite() {
         String keyword = (String) randomElement(feed.getKeywords());
         List<Tweet> tweets = twitter.search(keyword);
+        if(tweets.isEmpty()) {
+            log.add("Couldn't find any tweets to favorite.");
+            return false;
+        }
 
         // Should add some verification here
 
 
         Tweet tweet = (Tweet) randomElement(tweets);
-        if(tweet == null) {
-            log.add("Couldn't find any tweets to favorite.");
-            return false;
-        }
         tweet = twitter.favoriteTweet(tweet);
         if(!tweet.isFavorited()) {
             return false;
@@ -118,13 +118,12 @@ public class TwitterBot {
 
     public boolean findFollow() {
         List<Tweet> favorites = twitter.getFavorites();
-        Tweet tweet = (Tweet) randomElement(favorites);
-
-        if(tweet == null) {
+        if(favorites.isEmpty()) {
             log.add("No favorited tweets to follow from.");
             return false;
         }
 
+        Tweet tweet = (Tweet) randomElement(favorites);
         String user = tweet.getCreator();
         if(twitter.checkFollowingUser(user)) {
             log.add("Already following user " + user);
