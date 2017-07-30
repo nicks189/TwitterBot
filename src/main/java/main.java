@@ -18,10 +18,8 @@ public class main {
         try {
             Log log = Log.getSingleton();
 
-            // Ugly hack to find project root dir (Should probably change this)
             Path logPath = Paths.get(System.getProperty("user.dir"));
-            logPath = logPath.getParent().getParent().getParent();
-
+            logPath = Paths.get(logPath.toString(), "logs", "log.txt");
             log.addFile(logPath.toFile());
 
             String url = "https://news.google.com/news/rss/headlines/section/topic/TECHNOLOGY";
