@@ -29,13 +29,17 @@ public class main {
             keywords.add("dev");
             keywords.add("iphone");
             keywords.add("android");
+            keywords.add("apple");
             RomeFeed feed = new RomeFeed(url, keywords);
 
             TwitterBot bot = new TwitterBot(feed);
 
-            System.out.println(bot.performAction());
+            bot.start();
+
         } catch (FeedException | IOException e) {
+
             System.out.println("Something went wrong.");
+
         }
     }
 }

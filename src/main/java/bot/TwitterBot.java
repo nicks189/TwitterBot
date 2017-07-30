@@ -13,11 +13,12 @@ import java.util.Random;
 /**
  * Created by nicks189 on 7/11/17.
  */
-public class TwitterBot {
+public class TwitterBot implements Runnable {
     private Feed feed;
     private TwitterApi twitter;
     private Log log;
     private Random rand;
+    private Thread thread;
 
     public TwitterBot(Feed feed) {
         this.feed = feed;
@@ -26,13 +27,31 @@ public class TwitterBot {
         rand = new Random();
     }
 
+    public void run() {
+        try {
+            while (true) {
+                if (performAction()) {
+                    System.out.println("Action performed.");
+                    Thread.sleep(300000); // Sleep for 5 minutes
+                }
+            }
+        } catch(InterruptedException e) {
+            log.add("Received SIGINT.");
+        }
+    }
+
+    public void start() {
+        thread = new Thread(this, "TwitterBot");
+        thread.start();
+    }
+
     public boolean performAction() {
         rand.setSeed(System.currentTimeMillis());
         int num = rand.nextInt(8);
 
-        if(num == 0 || num == 1) {
+        if(num == 0) {
             return buildAndSendTweet();
-        } else if(num == 2 || num == 3) {
+        } else if(num == 2 || num == 3 || num == 1) {
             return findFavorite();
         } else if(num == 4 || num == 5) {
             return findFollow();
