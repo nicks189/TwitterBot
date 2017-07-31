@@ -126,6 +126,7 @@ public class Twitter4JApi implements TwitterApi {
             long cursor = followed.getNextCursor();
 
             while(cursor != 0) {
+                followed = twitter.getFriendsList(username(), cursor);
                 usernames.addAll(usersToStrings(followed));
                 cursor = followed.getNextCursor();
             }
