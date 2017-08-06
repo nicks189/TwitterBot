@@ -42,11 +42,11 @@ public class TwitterBot implements Runnable {
 
     public void start() {
         thread = new Thread(this, "TwitterBot");
+        rand.setSeed(System.currentTimeMillis());
         thread.start();
     }
 
     public boolean performAction() {
-        rand.setSeed(System.currentTimeMillis());
         int num = rand.nextInt(8);
 
         if(num == 0) {
