@@ -109,7 +109,7 @@ public class TwitterBot implements Runnable {
     public boolean findFavorite() {
         String keyword = (String) randomElement(feed.getKeywords());
         List<Tweet> tweets = twitter.search(keyword);
-        if(tweets.isEmpty()) {
+        if(tweets == null || tweets.isEmpty()) {
             log.add("Couldn't find any tweets to favorite.");
             return false;
         }
