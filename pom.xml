@@ -41,12 +41,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.rometools</groupId>
-            <artifactId>rome</artifactId>
-            <version>1.7.3</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.reactivex.rxjava2</groupId>
             <artifactId>rxjava</artifactId>
             <version>2.1.1</version>
