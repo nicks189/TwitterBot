@@ -32,7 +32,7 @@ public class TwitterBot implements Runnable {
             while (true) {
                 if (performAction()) {
                     System.out.println("Action performed.");
-                    Thread.sleep(300000); // Sleep for 5 minutes
+                    Thread.sleep(600000); // Sleep for 10 minutes
                 }
             }
         } catch(InterruptedException e) {
