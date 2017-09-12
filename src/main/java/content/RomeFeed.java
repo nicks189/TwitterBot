@@ -146,8 +146,8 @@ public class RomeFeed implements Feed {
                 }
             }
             return false; // Entry does not contain any keyword or is outdated
-        } else { // If keywords is empty than every entry is acceptable
-            return true;
+        } else {
+            return true;  // If keywords is empty than every entry is acceptable
         }
     }
 
