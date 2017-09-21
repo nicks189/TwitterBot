@@ -49,16 +49,17 @@ public class TwitterBot implements Runnable {
     public boolean performAction() {
         int num = rand.nextInt(10);
 
-        if(num == 0 || num == 1) {
+        // Temporary values to make the bot more active
+        if(num == 0 || num == 8) {
             return buildAndSendTweet();
-        } else if(num == 2 || num == 3 || num == 4) {
+        } else if(num == 2 || num == 3 || num == 4 || num == 9) {
             return findFavorite();
-        } else if(num == 5 || num == 6 || num == 7) {
+        } else if(num == 1 || num == 5 || num == 6 || num == 7) {
             return findFollow();
-        } else if(num == 8) {
-            return findUnfavorite();
-        } else if(num == 9) {
-            return findUnfollow();
+        // } else if(num == 8) {
+        //     return findUnfavorite();
+        // } else if(num == 9) {
+        //     return findUnfollow();
         }
         return false;
     }
