@@ -8,6 +8,7 @@ import java.util.Date;
 
 /**
  * Created by nicks189 on 7/11/17.
+ * Added just for funz
  */
 public class Log {
     private static Log instance = new Log();
@@ -26,7 +27,7 @@ public class Log {
 
     public boolean add(String message) {
         if(filePath == null) {
-            System.out.println("No log file selected; use log.addFile(file)");
+            System.err.println("No log file selected; use log.addFile(file)");
             return false;
         }
 
@@ -34,13 +35,13 @@ public class Log {
             try {
                 filePath.createNewFile();
             } catch(IOException e) {
-                System.out.println("Can't create log file.");
+                System.err.println("Can't create log file.");
                 return false;
             }
         }
 
         if(!filePath.canWrite()) {
-            System.out.println("Can't write to log file.");
+            System.err.println("Can't write to log file.");
             return false;
         }
 
@@ -53,7 +54,7 @@ public class Log {
 
         } catch(IOException e) {
 
-            System.out.println("Something went wrong when writing to log file.");
+            System.err.println("Something went wrong when writing to log file.");
             return false;
 
         }
