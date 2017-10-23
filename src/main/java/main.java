@@ -36,8 +36,6 @@ public class main {
                 keywords.add((String)jsonArray.get(i));
             }
 
-            System.out.println(keywords);
-
             RomeFeed feed = new RomeFeed(url, keywords);
             TwitterBot bot = new TwitterBot(feed);
             bot.start();
